@@ -7,9 +7,11 @@ function useFetch() {
 
     // const dispatch = useDispatch()
     async function sendRequest(url, options) {
+
         let response
         // this .? handle if the options. is not exist
-        console.log(`Request  ${options.name}`);
+        console.log(`Request options`,  options);
+        console.log(`Request url`,  url);
         if (options.method.toUpperCase() === 'GET') {
             response = await fetch(url, {
                 method: 'GET',
@@ -22,7 +24,9 @@ function useFetch() {
                     ...(options.method === 'POST' && { 'Content-Type': 'application/json' }),
                     ...(options.token && { Authorization: `Bearer ${options.token}` }),
                 },
-                body: (options.method === 'POST' || options.method === 'PUT' || options.method === 'PATCH') && JSON.stringify(options.body)
+                
+                body: (options?.body) && JSON.stringify(options.body)
+                // body: (options.method === 'POST' || options.method === 'PUT' || options.method === 'PATCH') && JSON.stringify(options.body)
             });
 }try {
             console.log('Response object',response);

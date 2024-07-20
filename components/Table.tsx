@@ -11,25 +11,26 @@ import { json } from "stream/consumers";
 //nested data is ok, see accessorKeys in ColumnDef below
 
 const SimpleTable = (props) => {
-
   const [modalData, setModalData] = useState({});
+  const [jsonData, setData, sendRequest] = useFetch();
+
+  const router = useRouter();
   //should be memoized or stable
 
-  
   const columns = useMemo(() => {
     let dynamic_columns = [];
-      for (const property in props.jsonData?.data[0]) {
-        // #Js_bug should unique id
-        dynamic_columns.push({
-          id: `${property}`,
-          accessorKey: `${property}`, //access nested data with dot notation
-          header: `${property}`,
-          size: 150,
-        });
-      }
-     
+    for (const property in props.jsonData?.data[0]) {
+      // #Js_bug should unique id
+      dynamic_columns.push({
+        id: `${property}`,
+        accessorKey: `${property}`, //access nested data with dot notation
+        header: `${property}`,
+        size: 150,
+      });
+    }
+
     return dynamic_columns;
-  }, [ ]);
+  }, []);
   // console.log(columns);
 
   // console.log('props.jsonData');
@@ -58,7 +59,23 @@ const SimpleTable = (props) => {
             edit
           </span>
           <br></br>
-          <span>delete</span>
+          <span
+            onClick={() => {
+              sendRequest(`/api/deleteNote`, {
+                method: "DELETE",
+                name: "dltNote",
+                body: {
+                  dataId: row.original.id,
+                  filepath: router.query.filepath,
+                },
+                onOk: () => {
+                  props.setTriggerFetch((old) => !old);
+                },
+              });
+            }}
+          >
+            delete
+          </span>
           <br></br>
         </>
       );
@@ -68,10 +85,13 @@ const SimpleTable = (props) => {
   return (
     <>
       {modalData?.creationDate && (
-        <DynamicModal setTriggerFetch={props.setTriggerFetch} data={modalData} />
+        <DynamicModal
+          setTriggerFetch={props.setTriggerFetch}
+          data={modalData}
+        />
       )}
       {/* #note_case empty data errrorunexpected */}
-      { <MaterialReactTable table={table} />}
+      {<MaterialReactTable table={table} />}
     </>
   );
 };

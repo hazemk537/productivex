@@ -30,15 +30,11 @@ function DynamicModal(props) {
 
   }
 
-  function dltItem() {
-    sendRequest('/api/deleteNote', {
-      method: 'PUT', name: 'dltNote', body: JSON.stringify(inputState)
-    })
-
-  } function addItem() {
+  function addItem() {
 
     sendRequest('/api/createNote', {
-      method: 'POST', name: 'createNote', body: JSON.stringify(inputState)
+      method: 'POST', name: 'createNote', 
+      body: JSON.stringify(inputState)
     })
 
 
@@ -46,7 +42,8 @@ function DynamicModal(props) {
     console.log('update note before send', { data: inputState, filepath: router.query.filepath });
 
     sendRequest('/api/updateNote', {
-      method: 'PUT', name: 'updateNote', body: { data: inputState, filepath: router.query.filepath }, onOk: () => {
+      method: 'PUT', name: 'updateNote', 
+      body: { data: inputState, filepath: router.query.filepath }, onOk: () => {
         props.setTriggerFetch((old) => !old)
       }
     })
