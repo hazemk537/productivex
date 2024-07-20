@@ -1,7 +1,10 @@
 import { useState } from 'react'
 
 function useFetch() {
-    const [data, setData] = useState('');
+    // const [data, setData] = useState('');
+    // if using for example data?.length>0
+    const [data, setData] = useState([]); 
+
     // const dispatch = useDispatch()
     async function sendRequest(url, options) {
         let response
@@ -22,12 +25,10 @@ function useFetch() {
                 body: (options.method === 'POST' || options.method === 'PUT' || options.method === 'PATCH') && JSON.stringify(options.body)
             });
 }try {
-            console.log('Response object');
-            console.log(response);
+            console.log('Response object',response);
             if (response.ok) {
                 if (options?.onOk) {
                     options.onOk(response)
-                    console.log('fffffffffff')
                 }
                 let jsonData = await response.json()
                 console.log(jsonData)

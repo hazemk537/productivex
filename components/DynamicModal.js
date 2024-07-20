@@ -4,7 +4,7 @@ import useFetch from '../customHook/useFetch'
 import { useRouter } from 'next/router'
 function DynamicModal(props) {
   const [data, , sendRequest] = useFetch()
-  const router=useRouter()
+  const router = useRouter()
   // to avoid errors when at first access props.data[] #note
   const [inputState, setInputState] = useState(props.data)
   // auto make input fields
@@ -32,23 +32,25 @@ function DynamicModal(props) {
 
   function dltItem() {
     sendRequest('/api/deleteNote', {
-      method: 'PUT', body: JSON.stringify(inputState)
+      method: 'PUT', name: 'dltNote', body: JSON.stringify(inputState)
     })
 
   } function addItem() {
 
     sendRequest('/api/createNote', {
-      method: 'POST', body: JSON.stringify(inputState)
+      method: 'POST', name: 'createNote', body: JSON.stringify(inputState)
     })
 
 
   } function updateItem() {
-    sendRequest('/api/updateNote', {
-      method: 'PUT', body: JSON.stringify({data:inputState,filePath:router.query.filePath}),onOk:(res)=>{
+    console.log('update note before send', { data: inputState, filepath: router.query.filepath });
 
-        console.log(res);
+    sendRequest('/api/updateNote', {
+      method: 'PUT', name: 'updateNote', body: { data: inputState, filepath: router.query.filepath }, onOk: () => {
+        props.setTriggerFetch((old) => !old)
       }
     })
+
 
   }
 
@@ -60,6 +62,7 @@ function DynamicModal(props) {
           return (
             <div key={idx}>
               {/* // #note object[string] */}
+              <span>{item}</span>
               <input value={inputState[item]}
                 onChange={(event) => {
                   setInputState((old) => {

@@ -27,6 +27,7 @@ function index(props) {
 }
 export default index;
 
+// #Note_case we may not need update files list based on user interaction so keep it server component
 export async function getServerSideProps(context) {
   // let tablePath=context?.params
   let folderPath = context?.query?.folder;
