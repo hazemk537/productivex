@@ -3,7 +3,8 @@ import {
   MaterialReactTable,
   useMaterialReactTable,
 } from "material-react-table";
-import DynamicModal from "./DynamicModal";
+import UpdateNoteModal from "./UpdateNoteModal";
+import AddNoteModal from './AddNoteModal.js'
 import useFetch from "@/customHook/useFetch";
 import { sendResponse } from "next/dist/server/image-optimizer";
 import { useRouter } from "next/router";
@@ -11,7 +12,8 @@ import { json } from "stream/consumers";
 //nested data is ok, see accessorKeys in ColumnDef below
 
 const SimpleTable = (props) => {
-  const [modalData, setModalData] = useState({});
+  const [editModalData, setEditModalData] = useState({});
+  const [addModalData, setaddModalData] = useState({});
   const [jsonData, setData, sendRequest] = useFetch();
 
   const router = useRouter();
@@ -53,7 +55,7 @@ const SimpleTable = (props) => {
         <>
           <span
             onClick={() => {
-              setModalData(row.original);
+              setEditModalData(row.original);
             }}
           >
             edit
@@ -84,10 +86,36 @@ const SimpleTable = (props) => {
 
   return (
     <>
-      {modalData?.creationDate && (
-        <DynamicModal
+      {/* #note_Case exist for all table types */}
+      <button
+        onClick={() => {
+          //#note_case generate intil modal val
+
+          let intialModalValue = props.jsonData?.data[0];
+          for (const property in props.jsonData?.data[0]) {
+            if (property === "id")
+              intialModalValue["id"] = props.jsonData?.data.length + 1;
+            else if (property === "creationDate")
+              intialModalValue["creationDate"] = new Date();
+            else
+            intialModalValue[property]=''
+          }
+          // #todo_3 will it set correctly or bad async effect
+
+          setaddModalData(intialModalValue);
+        }}
+      >
+        Add Note
+      </button>
+      {addModalData?.creationDate && (
+        <AddNoteModal 
+        setTriggerFetch={props.setTriggerFetch}
+        data={addModalData} />
+      )}
+      {editModalData?.creationDate && (
+        <UpdateNoteModal
           setTriggerFetch={props.setTriggerFetch}
-          data={modalData}
+          data={editModalData}
         />
       )}
       {/* #note_case empty data errrorunexpected */}

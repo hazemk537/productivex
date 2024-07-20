@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import useFetch from '../customHook/useFetch'
 import { useRouter } from 'next/router'
-function DynamicModal(props) {
+function AddNoteModal(props) {
   const [data, , sendRequest] = useFetch()
   const router = useRouter()
   // to avoid errors when at first access props.data[] #note
@@ -26,30 +26,20 @@ function DynamicModal(props) {
 
   }, [props.data])
 
-  if (!props.data?.id) {
 
-  }
 
   function addItem() {
+   
 
     sendRequest('/api/createNote', {
-      method: 'POST', name: 'createNote', 
-      body: JSON.stringify(inputState)
-    })
-
-
-  } function updateItem() {
-    console.log('update note before send', { data: inputState, filepath: router.query.filepath });
-
-    sendRequest('/api/updateNote', {
-      method: 'PUT', name: 'updateNote', 
-      body: { data: inputState, filepath: router.query.filepath }, onOk: () => {
-        props.setTriggerFetch((old) => !old)
+      method: 'POST', name: 'createNote',
+      body: JSON.stringify({data:inputState,filepath:router.query.filepath}),onOk:()=>{
+        props.setTriggerFetch()
       }
     })
 
 
-  }
+  } 
 
   return (
     <div>
@@ -79,9 +69,14 @@ function DynamicModal(props) {
 
 
       }
-      <button onClick={() => { updateItem() }}>Save Data</button>
+      <button onClick={() => {
+          addItem()
+        
+
+
+      }}>Save Data</button>
     </div>
   )
 }
 
-export default DynamicModal
+export default AddNoteModal

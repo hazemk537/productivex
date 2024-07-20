@@ -39,7 +39,7 @@ export default async function handler(req, res) {
   }).then((newData) => {
     // backed res
     writeFile(`${filepath}`, JSON.stringify(newData), (err) => {
-      if (err) {pt
+      if (err) {
 
         throw new Error('error while writing new data')
 
@@ -47,7 +47,7 @@ export default async function handler(req, res) {
       else {
         console.log('File Saved Successfully',`${filepath}`);
 
-        res.status(200).json({ message: 'update api!', newData })
+        res.status(200).json({ message: 'update api!' })
 
       }
     })
