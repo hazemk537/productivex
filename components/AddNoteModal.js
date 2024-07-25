@@ -29,17 +29,19 @@ function AddNoteModal(props) {
 
 
   function addItem() {
-   
+
 
     sendRequest('/api/createNote', {
       method: 'POST', name: 'createNote',
-      body: JSON.stringify({data:inputState,filepath:router.query.filepath}),onOk:()=>{
-        props.setTriggerFetch()
+      body: JSON.stringify({ data: inputState, filepath: router.query.filepath }), onOk: () => {
+        setInputState({})
+
+        props.setTriggerFetch((old) => !old)
       }
     })
 
 
-  } 
+  }
 
   return (
     <div>
@@ -50,7 +52,9 @@ function AddNoteModal(props) {
             <div key={idx}>
               {/* // #note object[string] */}
               <span>{item}</span>
-              <input value={inputState[item]}
+             
+
+              <textarea value={inputState[item]}
                 onChange={(event) => {
                   setInputState((old) => {
                     // console.log(event.target.value);
@@ -62,7 +66,7 @@ function AddNoteModal(props) {
 
                     return { ...old, ...tempObj }
                   })
-                }} />
+                }} type={item === 'url' ? "url":'text'}/>
             </div>
           )
         })
@@ -70,8 +74,8 @@ function AddNoteModal(props) {
 
       }
       <button onClick={() => {
-          addItem()
-        
+        addItem()
+
 
 
       }}>Save Data</button>

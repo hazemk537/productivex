@@ -53,7 +53,7 @@ function UpdateNoteModal(props) {
             <div key={idx}>
               {/* // #note object[string] */}
               <span>{item}</span>
-              <input value={inputState[item]}
+              <textarea value={inputState[item]}
                 onChange={(event) => {
                   setInputState((old) => {
                     // console.log(event.target.value);
